@@ -39,9 +39,6 @@ async def get_movies(
             str(request.url_for("get_movies")) + f"?page={page_num}&per_page={per_page}"
         )
 
-    prev_page = build_page_url(page - 1) if page > 1 else None
-    next_page = build_page_url(page + 1) if len(movies) == per_page else None
-
     total_items_result = await db.execute(select(func.count()).select_from(MovieModel))
     total_items = total_items_result.scalar_one_or_none()
     total_pages = (
@@ -49,6 +46,9 @@ async def get_movies(
         if total_items % per_page == 0
         else total_items // per_page + 1
     )
+
+    prev_page = build_page_url(page - 1) if page > 1 else None
+    next_page = build_page_url(page + 1) if page < total_pages else None
 
     return MovieListResponseSchema(
         movies=movies,
