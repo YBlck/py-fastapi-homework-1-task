@@ -31,8 +31,8 @@ async def get_movies(
     result = await db.execute(select(MovieModel).offset(offset).limit(per_page))
     movies = result.scalars().all()
 
-    if not movies:
-        raise HTTPException(status_code=404, detail="No movies found.")
+    # if not movies:
+    #     raise HTTPException(status_code=404, detail="No movies found.")
 
     def build_page_url(page_num: int) -> str | None:
         return (
